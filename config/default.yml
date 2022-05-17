@@ -1,9 +1,2 @@
 server:
   port: 3600
-database:
-  postgres:
-    host: 'localhost'
-    port: 5432
-    username: ''
-    password: ''
-    database: 'recruitment-task-nestjs'
