@@ -2,7 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { from, map } from 'rxjs';
 import { Observable } from 'rxjs';
-import { IContactDb } from '../../collections/contacts/contacts-database.models';
+import {
+  IContactDb,
+  ICreateContact,
+} from '../../collections/contacts/contacts-database.models';
 import { ContactsDatabaseService } from '../../collections/contacts/contacts-database.service';
 import { ContactPgDto } from './contacts-pg.models';
 import { ContactPgRepository } from './contacts-pg.repository';
@@ -13,12 +16,6 @@ export class ContactsPgService implements ContactsDatabaseService {
     @InjectRepository(ContactPgRepository)
     private contactPgRepository: ContactPgRepository,
   ) {}
-
-  createOne(createDto: IContactDb): Observable<IContactDb> {
-    return from(this.contactPgRepository.createOne(createDto)).pipe(
-      map((contactPg) => new ContactPgDto(contactPg)),
-    );
-  }
 
   getOne(contactId: string): Observable<IContactDb> {
     return from(this.contactPgRepository.getOne(contactId)).pipe(
@@ -31,5 +28,23 @@ export class ContactsPgService implements ContactsDatabaseService {
         return new ContactPgDto(contactPg);
       }),
     );
+  }
+
+  createOne(createDto: ICreateContact): Observable<IContactDb> {
+    return from(this.contactPgRepository.createOne(createDto)).pipe(
+      map((contactPg) => new ContactPgDto(contactPg)),
+    );
+  }
+
+  createMany(createDtos: ICreateContact[]): Observable<IContactDb[]> {
+    return from(this.contactPgRepository.createMany(createDtos)).pipe(
+      map((contactPg) =>
+        contactPg.map((contactPg) => new ContactPgDto(contactPg)),
+      ),
+    );
+  }
+
+  deleteAll(): Observable<unknown> {
+    return from(this.contactPgRepository.deleteAll());
   }
 }

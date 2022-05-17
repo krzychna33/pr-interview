@@ -8,8 +8,7 @@ const ORMConfig: TypeOrmModuleOptions = {
   username: config.get('database.postgres.username'),
   password: config.get('database.postgres.password'),
   database: config.get('database.postgres.database'),
-  // entities: ['dist/src/**/*.entity.{ts,js}', '**/*.entity.ts'],
-  entities: ['dist/src/**/*.entity.{ts,js}'],
+  entities: ['**/*.entity.ts'],
   synchronize: true,
   keepConnectionAlive: true,
 };

@@ -1,4 +1,3 @@
-import { IContactDb } from '@app/core/database/collections/contacts/contacts-database.models';
 import {
   Body,
   Controller,
@@ -8,22 +7,35 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { CreateContactDto } from './contacts.dto';
+import {
+  CreateContactDto,
+  CreateManyContactsDto,
+  ResponseContactDto,
+} from './contacts.dto';
 import { ContactsService } from './contacts.service';
 
-@Controller()
+@Controller('contacts')
 export class ContactsController {
   constructor(private readonly contactsService: ContactsService) {}
+
+  @Post('many')
+  createMany(
+    @Body(ValidationPipe) createContactDtos: CreateManyContactsDto,
+  ): Observable<ResponseContactDto[]> {
+    return this.contactsService.createMany(createContactDtos.contacts);
+  }
+
+  @Get(':contactId')
+  getOne(
+    @Param('contactId') contactId: string,
+  ): Observable<ResponseContactDto> {
+    return this.contactsService.getOne(contactId);
+  }
 
   @Post()
   createOne(
     @Body(ValidationPipe) createContactDto: CreateContactDto,
-  ): Observable<IContactDb> {
+  ): Observable<ResponseContactDto> {
     return this.contactsService.createOne(createContactDto);
-  }
-
-  @Get(':contactId')
-  getOne(@Param('contactId') contactId: string): Observable<IContactDb> {
-    return this.contactsService.getOne(contactId);
   }
 }
