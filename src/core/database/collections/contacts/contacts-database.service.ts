@@ -4,5 +4,6 @@ import { IContactDb } from './contacts-database.models';
 
 @Injectable()
 export abstract class ContactsDatabaseService {
-  abstract getAll(): Observable<IContactDb[]>;
+  abstract createOne(createDto: IContactDb): Observable<IContactDb>;
+  abstract getOne(contactId: string): Observable<IContactDb>;
 }

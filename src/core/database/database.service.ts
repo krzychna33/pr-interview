@@ -9,7 +9,11 @@ export class DatabaseService {
     private readonly contactsDatabaseService: ContactsDatabaseService,
   ) {}
 
-  contactsGetAll(): Observable<IContactDb[]> {
-    return this.contactsDatabaseService.getAll();
+  contactsCreateOne(createContact: IContactDb): Observable<IContactDb> {
+    return this.contactsDatabaseService.createOne(createContact);
+  }
+
+  contactsGetOne(contactId: string): Observable<IContactDb> {
+    return this.contactsDatabaseService.getOne(contactId);
   }
 }
