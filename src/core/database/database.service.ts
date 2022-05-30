@@ -24,7 +24,7 @@ export class DatabaseService {
     return this.contactsDatabaseService.createMany(createDtos);
   }
 
-  contactsDeleteAll(): Observable<unknown> {
-    return this.contactsDatabaseService.deleteAll();
+  contactsDeleteAll(ids: string[]): Observable<unknown> {
+    return this.contactsDatabaseService.deleteAll(ids);
   }
 }

@@ -7,6 +7,7 @@ import { DatabaseService } from '@app/core/database/database.service';
 describe('App e2e', () => {
   let app: INestApplication;
   let databaseService: DatabaseService;
+  const contactIds: string[] = [];
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -26,7 +27,6 @@ describe('App e2e', () => {
   });
 
   describe('ContactsController', () => {
-    const contactIds: string[] = [];
     const contact = {
       firstName: 'first',
       lastName: 'last',
@@ -51,7 +51,7 @@ describe('App e2e', () => {
         .end(done);
     });
 
-    it('/contacts (GET)', (done) => {
+    it('/contacts/:id (GET)', (done) => {
       const id = contactIds[0];
       request(app.getHttpServer())
         .get(`/contacts/${id}`)
@@ -64,7 +64,7 @@ describe('App e2e', () => {
   });
 
   afterAll((done) => {
-    databaseService.contactsDeleteAll().subscribe(async () => {
+    databaseService.contactsDeleteAll(contactIds).subscribe(async () => {
       await app.close();
       done();
     });

@@ -10,16 +10,17 @@
 # **Zadanie rekrutacyjne**
 
 ## 1. Rozszerz obiekt kontaktu o nowe pola
-  - dodaj nowe pole "phoneNumber" typu intiger o długości 9 cyfr
+  - dodaj nowe pole "phoneNumber" o długości 9 cyfr
   - dodaj walidację do "email"
   - uaktualnij istniejący test e2e oraz stwórz nowy sprawdzający czy walidacja działa prawidłowo (jeden request ze złym "phoneNumber" i "email")
 
 ## 2. Dodaj informacje na temat adresów w kontakcie
-  - stwórz nowy endpoint dzięki któremu można dodać wiele adresów do kontaktu
-  - adres powinien składać się z pól "city", "address", "postalCode"
-  - adresy powinny być zapisywane w nowej tabeli w bazie danych, przy pobieraniu kontaktu od razu powinny być pobrane adresy przypisane do niego
+  - stwórz nowy endpoint dzięki któremu można dodać wiele adresów do kontaktu, w respone powinny być one zwrócone z przypisanymi id
+  - adres ma składać się z pól "city", "address", "postalCode"
+  - adresy powinny być zapisywane w nowej tabeli w bazie danych
+  - adresy mają być pobierane wraz z zapytaniem o kontakty
   - stwórz nowy test e2e sprawdzający dodawanie kilku adresów do istniejącego kontaktu
 
 ## 3. Optymalizacja aplikacji
-  - stwórz nowy test dodający 10000 kontaktów w jednym zapytaniu za pomocą "ContactsController.createMany"
+  - stwórz nowy test dodający wiele (np. 10000, chodzi o długi czas wykonywania zapytania) kontaktów w jednym zapytaniu za pomocą "ContactsController.createMany"
   - znajdź problemy i zoptymalizuj aktualne rozwiązanie aby zapytanie wykonywało się szybciej

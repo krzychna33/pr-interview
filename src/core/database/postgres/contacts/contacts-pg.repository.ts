@@ -45,7 +45,7 @@ export class ContactPgRepository extends Repository<ContactPg> {
     return response;
   }
 
-  public async deleteAll(): Promise<unknown> {
-    return this.clear();
+  public async deleteAll(ids: string[]): Promise<unknown> {
+    return this.delete(ids);
   }
 }

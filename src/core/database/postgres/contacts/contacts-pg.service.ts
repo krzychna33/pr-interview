@@ -44,7 +44,7 @@ export class ContactsPgService implements ContactsDatabaseService {
     );
   }
 
-  deleteAll(): Observable<unknown> {
-    return from(this.contactPgRepository.deleteAll());
+  deleteAll(ids: string[]): Observable<unknown> {
+    return from(this.contactPgRepository.deleteAll(ids));
   }
 }

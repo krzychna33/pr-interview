@@ -10,5 +10,5 @@ export abstract class ContactsDatabaseService {
 
   abstract createMany(createDtos: ICreateContact[]): Observable<IContactDb[]>;
 
-  abstract deleteAll(): Observable<unknown>;
+  abstract deleteAll(ids: string[]): Observable<unknown>;
 }
