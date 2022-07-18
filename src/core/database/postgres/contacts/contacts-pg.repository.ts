@@ -10,14 +10,15 @@ export class ContactPgRepository extends Repository<ContactPg> {
 
   public async createOne(createContact: ICreateContact): Promise<ContactPg> {
     const contact = new ContactPg();
+    const nowDate = new Date();
 
     contact.first_name = createContact.firstName;
     contact.last_name = createContact.lastName;
     contact.age = createContact.age;
     contact.email = createContact.email;
 
-    contact.created_date = new Date();
-    contact.updated_date = new Date();
+    contact.created_date = nowDate;
+    contact.updated_date = nowDate;
 
     return await contact.save();
   }
