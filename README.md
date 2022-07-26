@@ -2,15 +2,15 @@
 
 # **Instalacja**
 
-## 1. wymagany zainstalowany Node.js w wersji min. v16.13.2
-## 2. wykorzystywana baza danych to PostgreSQL
-## 3. należy skonfigurować pliki konfiguracyjne do korzystania z nowo stworzonej bazy danych
+### 1. wymagany zainstalowany Node.js w wersji min. v16.13.2
+### 2. wykorzystywana baza danych to PostgreSQL
+### 3. należy skonfigurować pliki konfiguracyjne do korzystania z nowo stworzonej bazy danych
   - plik development.yml i test.yml na podstawie enviroment.yml.example
 
 # **Zadanie rekrutacyjne**
 
 ## 1. Rozszerz obiekt kontaktu o nowe pola
-  - dodaj nowe pole "phoneNumber" o długości 9 cyfr
+  - dodaj nowe pole "phoneNumber" z walidacją
   - dodaj walidację do "email"
   - uaktualnij istniejący test e2e oraz stwórz nowy sprawdzający czy walidacja działa prawidłowo (jeden request ze złym "phoneNumber" i "email")
 

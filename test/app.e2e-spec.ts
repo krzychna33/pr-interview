@@ -34,8 +34,7 @@ describe('App e2e', () => {
       email: 'bad.email',
     };
 
-    it('/contacts (POST)', (done) => {
-      console.time('test');
+    it('should create by /contacts (POST)', (done) => {
       request(app.getHttpServer())
         .post('/contacts/')
         .send(contact)
@@ -45,13 +44,11 @@ describe('App e2e', () => {
           contactIds.push(body.id);
 
           expect(body).toEqual({ ...contact, id: expect.any(String) });
-
-          console.timeEnd('test');
         })
         .end(done);
     });
 
-    it('/contacts/:id (GET)', (done) => {
+    it('should get by /contacts/:id (GET)', (done) => {
       const id = contactIds[0];
       request(app.getHttpServer())
         .get(`/contacts/${id}`)

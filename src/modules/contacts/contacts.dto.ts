@@ -1,8 +1,5 @@
-import {
-  IContactDb,
-  ICreateContact,
-} from '@app/core/database/collections/contacts/contacts-database.models';
-import { Type } from 'class-transformer';
+import { ICreateContact } from '@app/core/models/contact.model';
+import { Expose, Type } from 'class-transformer';
 import {
   ArrayNotEmpty,
   IsInt,
@@ -17,25 +14,17 @@ export class CreateContactDto implements ICreateContact {
   @IsString() email: string;
 }
 
+export class ResponseContactDto {
+  @Expose() id: string;
+  @Expose() firstName: string;
+  @Expose() lastName: string;
+  @Expose() age: number;
+  @Expose() email: string;
+}
+
 export class CreateManyContactsDto {
   @ArrayNotEmpty()
   @ValidateNested({ each: true })
   @Type(() => CreateContactDto)
   contacts: ICreateContact[];
-}
-
-export class ResponseContactDto {
-  id: string;
-  firstName: string;
-  lastName: string;
-  age: number;
-  email: string;
-
-  constructor(contact: IContactDb) {
-    this.id = contact.id;
-    this.firstName = contact.firstName;
-    this.lastName = contact.lastName;
-    this.age = contact.age;
-    this.email = contact.email;
-  }
 }

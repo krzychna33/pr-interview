@@ -1,32 +1,39 @@
-import { ICreateContact } from '@app/core/database/collections/contacts/contacts-database.models';
-import { DatabaseService } from '@database/database.service';
+import { ControllerService } from '@app/core/utilities/controller.service';
+import { DatabaseService } from '@app/core/database/database.service';
+import { IContact, ICreateContact } from '@app/core/models/contact.model';
 import { Injectable } from '@nestjs/common';
-import { map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ResponseContactDto } from './contacts.dto';
 
 @Injectable()
-export class ContactsService {
-  constructor(private readonly databaseService: DatabaseService) {}
+export class ContactsService extends ControllerService<
+  ResponseContactDto,
+  IContact
+> {
+  constructor(private readonly databaseService: DatabaseService) {
+    super(ResponseContactDto);
+  }
 
-  getOne(contactId: string): Observable<ResponseContactDto> {
+  public getOne(contactId: string): Observable<ResponseContactDto> {
     return this.databaseService
       .contactsGetOne(contactId)
-      .pipe(map((contact) => new ResponseContactDto(contact)));
+      .pipe(map((contact) => this.dtoMapper(contact)));
   }
 
-  createOne(createDto: ICreateContact): Observable<ResponseContactDto> {
+  public createOne(createDto: ICreateContact): Observable<ResponseContactDto> {
     return this.databaseService
       .contactsCreateOne(createDto)
-      .pipe(map((contact) => new ResponseContactDto(contact)));
+      .pipe(map((contact) => this.dtoMapper(contact)));
   }
 
-  createMany(createDtos: ICreateContact[]): Observable<ResponseContactDto[]> {
+  public createMany(
+    createDtos: ICreateContact[],
+  ): Observable<ResponseContactDto[]> {
     return this.databaseService
       .contactsCreateMany(createDtos)
       .pipe(
-        map((contacts) =>
-          contacts.map((contact) => new ResponseContactDto(contact)),
-        ),
+        map((contacts) => contacts.map((contact) => this.dtoMapper(contact))),
       );
   }
 }

@@ -1,30 +1,37 @@
-import { Injectable } from '@nestjs/common';
-import { Observable } from 'rxjs';
-import {
-  IContactDb,
-  ICreateContact,
-} from './collections/contacts/contacts-database.models';
-import { ContactsDatabaseService } from './collections/contacts/contacts-database.service';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { from, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { IContact, ICreateContact } from '../models/contact.model';
+import { ContactRepository } from './contacts/contacts.repository';
 
 @Injectable()
 export class DatabaseService {
   constructor(
-    private readonly contactsDatabaseService: ContactsDatabaseService,
+    @InjectRepository(ContactRepository)
+    private readonly contactRepository: ContactRepository,
   ) {}
 
-  contactsGetOne(contactId: string): Observable<IContactDb> {
-    return this.contactsDatabaseService.getOne(contactId);
+  public contactsGetOne(contactId: string): Observable<IContact> {
+    return from(this.contactRepository.getOne(contactId)).pipe(
+      map((contact) => {
+        if (!contact)
+          throw new NotFoundException(
+            `Could not find contact by id ${contactId}`,
+          );
+        return contact;
+      }),
+    );
   }
-
-  contactsCreateOne(createDto: ICreateContact): Observable<IContactDb> {
-    return this.contactsDatabaseService.createOne(createDto);
+  public contactsCreateOne(createDto: ICreateContact): Observable<IContact> {
+    return from(this.contactRepository.createOne(createDto));
   }
-
-  contactsCreateMany(createDtos: ICreateContact[]): Observable<IContactDb[]> {
-    return this.contactsDatabaseService.createMany(createDtos);
+  public contactsCreateMany(
+    createDtos: ICreateContact[],
+  ): Observable<IContact[]> {
+    return from(this.contactRepository.createMany(createDtos));
   }
-
-  contactsDeleteAll(ids: string[]): Observable<unknown> {
-    return this.contactsDatabaseService.deleteAll(ids);
+  public contactsDeleteAll(ids: string[]) {
+    return from(this.contactRepository.deleteAll(ids));
   }
 }
