@@ -1,5 +1,6 @@
-port: 'Override default if required'
 environment: 'development / test'
+server:
+  port: 'Override default if required'
 database:
   postgres:
     host: 'server host'

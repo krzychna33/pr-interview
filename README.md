@@ -4,8 +4,8 @@
 
 ### 1. wymagany zainstalowany Node.js w wersji min. v16.13.2
 ### 2. wykorzystywana baza danych to PostgreSQL
-### 3. należy skonfigurować pliki konfiguracyjne do korzystania z nowo stworzonej bazy danych
-  - plik development.yml i test.yml na podstawie enviroment.yml.example
+### 3. należy skonfigurować pliki konfiguracyjne
+  - zaktualizuj plik default.yml o informacje bazy danych
 
 # **Zadanie rekrutacyjne**
 

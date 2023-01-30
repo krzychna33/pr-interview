@@ -31,7 +31,4 @@ export class DatabaseService {
   ): Observable<IContact[]> {
     return from(this.contactRepository.createMany(createDtos));
   }
-  public contactsDeleteAll(ids: string[]) {
-    return from(this.contactRepository.deleteAll(ids));
-  }
 }

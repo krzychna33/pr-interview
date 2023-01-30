@@ -1,13 +1,13 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { ContactEntity } from '@app/core/database/contacts/contacts.entity';
 import { INestApplication } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
+import { getConnection } from 'typeorm';
 import { AppModule } from './../src/app.module';
-import { DatabaseService } from '@app/core/database/database.service';
 
 describe('App e2e', () => {
   let app: INestApplication;
-  let databaseService: DatabaseService;
-  const contactIds: string[] = [];
+  let contactId: string;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -18,8 +18,6 @@ describe('App e2e', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
-
-    databaseService = moduleFixture.get<DatabaseService>(DatabaseService);
   });
 
   it('should init app', () => {
@@ -41,7 +39,7 @@ describe('App e2e', () => {
         .expect(201)
         .expect((response) => {
           const body = response.body;
-          contactIds.push(body.id);
+          contactId = body.id;
 
           expect(body).toEqual({ ...contact, id: expect.any(String) });
         })
@@ -49,7 +47,7 @@ describe('App e2e', () => {
     });
 
     it('should get by /contacts/:id (GET)', (done) => {
-      const id = contactIds[0];
+      const id = contactId;
       request(app.getHttpServer())
         .get(`/contacts/${id}`)
         .expect(200)
@@ -60,10 +58,9 @@ describe('App e2e', () => {
     });
   });
 
-  afterAll((done) => {
-    databaseService.contactsDeleteAll(contactIds).subscribe(async () => {
-      await app.close();
-      done();
-    });
+  afterAll(async () => {
+    const contactRepository = getConnection().getRepository(ContactEntity);
+    await contactRepository.clear();
+    app.close();
   });
 });

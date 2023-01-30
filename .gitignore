@@ -11,11 +11,6 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
-# env
-development.yml
-production.yml
-test.yml
-
 # OS
 .DS_Store
 
