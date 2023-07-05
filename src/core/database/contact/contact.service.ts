@@ -1,11 +1,16 @@
 import { ICreateContact } from '@app/core/models/contact.model';
-import { EntityRepository, Repository } from 'typeorm';
-import { ContactEntity } from './contacts.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { ContactEntity } from './contact.entity';
 
-@EntityRepository(ContactEntity)
-export class ContactRepository extends Repository<ContactEntity> {
-  public async getOne(contactId: string): Promise<ContactEntity | undefined> {
-    return await this.findOne(contactId);
+export class ContactService {
+  constructor(
+    @InjectRepository(ContactEntity)
+    private contactRepository: Repository<ContactEntity>,
+  ) {}
+
+  public async getOne(id: string): Promise<ContactEntity | null> {
+    return await this.contactRepository.findOne({ where: { id } });
   }
 
   public async createOne(
@@ -18,7 +23,7 @@ export class ContactRepository extends Repository<ContactEntity> {
     contact.age = createContact.age;
     contact.email = createContact.email;
 
-    return await this.save(contact);
+    return await this.contactRepository.save(contact);
   }
 
   public async createMany(
@@ -38,7 +43,7 @@ export class ContactRepository extends Repository<ContactEntity> {
       contact.age = createContact.age;
       contact.email = createContact.email;
 
-      const savedData = await this.save(contact);
+      const savedData = await this.contactRepository.save(contact);
       response.push(savedData);
     }
 

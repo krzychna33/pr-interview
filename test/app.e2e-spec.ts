@@ -1,12 +1,12 @@
-import { ContactEntity } from '@app/core/database/contacts/contacts.entity';
+import { ContactService } from '@app/core/database/contact/contact.service';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
-import { getConnection } from 'typeorm';
 import { AppModule } from './../src/app.module';
 
 describe('App e2e', () => {
   let app: INestApplication;
+  let contactService: ContactService;
   let contactId: string;
 
   beforeEach(async () => {
@@ -15,9 +15,9 @@ describe('App e2e', () => {
     })
       .compile()
       .then();
-
     app = moduleFixture.createNestApplication();
     await app.init();
+    contactService = moduleFixture.get(ContactService);
   });
 
   it('should init app', () => {
@@ -59,8 +59,7 @@ describe('App e2e', () => {
   });
 
   afterAll(async () => {
-    const contactRepository = getConnection().getRepository(ContactEntity);
-    await contactRepository.clear();
+    await contactService['contactRepository'].delete({});
     app.close();
   });
 });
