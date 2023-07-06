@@ -1,16 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { from, Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IContact, ICreateContact } from '../models/contact.model';
-import { ContactRepository } from './contacts/contacts.repository';
+import { ContactService } from './contact/contact.service';
 
 @Injectable()
 export class DatabaseService {
-  constructor(
-    @InjectRepository(ContactRepository)
-    private readonly contactRepository: ContactRepository,
-  ) {}
+  constructor(private readonly contactRepository: ContactService) {}
 
   public contactsGetOne(contactId: string): Observable<IContact> {
     return from(this.contactRepository.getOne(contactId)).pipe(
