@@ -5,8 +5,8 @@ type IClassType<T> = new () => T;
 export abstract class ControllerService<T, P> {
   constructor(private readonly dtoClass: IClassType<T>) {}
 
-  protected dtoMapper(contact: P) {
-    return plainToClass(this.dtoClass, contact, {
+  protected dtoMapper(entity: P) {
+    return plainToClass(this.dtoClass, entity, {
       strategy: 'excludeAll',
     });
   }

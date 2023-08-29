@@ -34,10 +34,6 @@ export class ContactService {
     for (const createContact of createContacts) {
       const contact = new ContactEntity();
 
-      const nowDate = new Date();
-      contact.createdDate = nowDate;
-      contact.updatedDate = nowDate;
-
       contact.firstName = createContact.firstName;
       contact.lastName = createContact.lastName;
       contact.age = createContact.age;
