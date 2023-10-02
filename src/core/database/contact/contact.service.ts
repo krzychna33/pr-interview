@@ -10,7 +10,10 @@ export class ContactService {
   ) {}
 
   public async getOne(id: string): Promise<ContactEntity | null> {
-    return await this.contactRepository.findOne({ where: { id } });
+    return await this.contactRepository.findOne({
+      where: { id },
+      relations: ['addresses'],
+    });
   }
 
   public async createOne(
@@ -22,6 +25,7 @@ export class ContactService {
     contact.lastName = createContact.lastName;
     contact.age = createContact.age;
     contact.email = createContact.email;
+    contact.phoneNumber = createContact.phoneNumber;
 
     return await this.contactRepository.save(contact);
   }

@@ -7,13 +7,14 @@ import * as config from 'config';
 import * as ormConfig from 'config/ormConfig';
 import * as ormConfigTest from 'config/ormConfigTest';
 import { DatabaseService } from './database.service';
+import { AddressEntity } from '@database/address/address.entity';
 
 const env = config.get('environment');
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(env === 'test' ? ormConfigTest : ormConfig),
-    TypeOrmModule.forFeature([ContactEntity]),
+    TypeOrmModule.forFeature([ContactEntity, AddressEntity]),
   ],
   providers: [DatabaseService, ContactService, AddressService],
   exports: [DatabaseService],

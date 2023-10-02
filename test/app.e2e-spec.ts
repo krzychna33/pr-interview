@@ -1,13 +1,17 @@
 import { ContactService } from '@app/core/database/contact/contact.service';
-import { INestApplication } from '@nestjs/common';
+import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
+import { AddressService } from '@database/address/address.service';
+import { IAddress } from '@core/models/address.model';
 
 describe('App e2e', () => {
   let app: INestApplication;
   let contactService: ContactService;
+  let addressService: AddressService;
   let contactId: string;
+  let contactAddresses: IAddress[];
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -18,6 +22,7 @@ describe('App e2e', () => {
     app = moduleFixture.createNestApplication();
     await app.init();
     contactService = moduleFixture.get(ContactService);
+    addressService = moduleFixture.get(AddressService);
   });
 
   it('should init app', () => {
@@ -29,7 +34,8 @@ describe('App e2e', () => {
       firstName: 'first',
       lastName: 'last',
       age: 55,
-      email: 'bad.email',
+      email: 'bad@email.com',
+      phoneNumber: '+48500100200',
     };
 
     it('should create by /contacts (POST)', (done) => {
@@ -46,13 +52,83 @@ describe('App e2e', () => {
         .end(done);
     });
 
+    const contactBadDto = {
+      firstName: 'first',
+      lastName: 'last',
+      age: 55,
+      email: 'bad.email.com',
+      phoneNumber: '+123',
+    };
+
+    it('should throw validation error on /contacts (POST)', (done) => {
+      request(app.getHttpServer())
+        .post('/contacts/')
+        .send(contactBadDto)
+        .expect(HttpStatus.BAD_REQUEST)
+        .expect((response) => {
+          const body = response.body;
+
+          expect(body.message).toContain('email must be an email');
+          expect(body.message).toContain(
+            'phoneNumber must be a valid phone number',
+          );
+        })
+        .end(done);
+    });
+
     it('should get by /contacts/:id (GET)', (done) => {
       const id = contactId;
       request(app.getHttpServer())
         .get(`/contacts/${id}`)
         .expect(200)
         .expect((response) => {
-          expect(response.body).toEqual({ ...contact, id });
+          expect(response.body).toEqual({ ...contact, id, addresses: [] });
+        })
+        .end(done);
+    });
+
+    it('should create new addresses', (done) => {
+      const createAddressesDto = {
+        addresses: [
+          {
+            address: 'xx',
+            city: 'xxx',
+            postalCode: 'xx-xxx',
+          },
+          {
+            address: 'xx1',
+            city: 'xxx1',
+            postalCode: 'xx-xxx1',
+          },
+        ],
+      };
+      request(app.getHttpServer())
+        .post(`/contacts/${contactId}/addresses/many`)
+        .send(createAddressesDto)
+        .expect(HttpStatus.CREATED)
+        .expect((response) => {
+          expect(response.body).toEqual(
+            createAddressesDto.addresses.map((c) => ({
+              ...c,
+              id: expect.any(String),
+            })),
+          );
+          contactAddresses = response.body;
+        })
+        .end(done);
+    });
+
+    it('should get by /contacts/:id (GET) with created address', (done) => {
+      const id = contactId;
+      request(app.getHttpServer())
+        .get(`/contacts/${id}`)
+        .expect(200)
+        .expect((response) => {
+          expect(response.body).toEqual({
+            ...contact,
+            id,
+            addresses: contactAddresses,
+          });
         })
         .end(done);
     });

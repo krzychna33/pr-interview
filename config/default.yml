@@ -4,6 +4,6 @@ database:
   postgres:
     host: 'localhost'
     port: 5432
-    username: ''
-    password: ''
-    database: 'recruitment-task-nestjs'
+    username: 'postgres'
+    password: 'postgres'
+    database: 'recruitmenttasknestjs'

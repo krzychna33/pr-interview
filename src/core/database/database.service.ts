@@ -37,7 +37,8 @@ export class DatabaseService {
 
   public addressesCreateMany(
     createAddresses: ICreateAddress[],
+    contactId: string,
   ): Observable<IAddress[]> {
-    return from(this.addressService.createMany(createAddresses));
+    return from(this.addressService.createMany(createAddresses, contactId));
   }
 }
