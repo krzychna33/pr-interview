@@ -33,6 +33,10 @@ export class ContactService {
   public async createMany(
     createContacts: ICreateContact[],
   ): Promise<ContactEntity[]> {
+    // I changed method of inserting data to database
+    // Instead inserting contacts one by one i am doing it in one single batch
+    // this is faster
+
     const contactsToInsert = createContacts.map((createContact) => {
       const newContact = new ContactEntity();
 
