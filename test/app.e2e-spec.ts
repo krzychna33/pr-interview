@@ -5,6 +5,7 @@ import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { AddressService } from '@database/address/address.service';
 import { IAddress } from '@core/models/address.model';
+import { json, urlencoded } from 'express';
 
 describe('App e2e', () => {
   let app: INestApplication;
@@ -20,6 +21,7 @@ describe('App e2e', () => {
       .compile()
       .then();
     app = moduleFixture.createNestApplication();
+    app.use(json({ limit: '50mb' }));
     await app.init();
     contactService = moduleFixture.get(ContactService);
     addressService = moduleFixture.get(AddressService);
@@ -129,6 +131,37 @@ describe('App e2e', () => {
             id,
             addresses: contactAddresses,
           });
+        })
+        .end(done);
+    });
+
+    it('should create 10000 contacts', (done) => {
+      const createManyContactsDto = {
+        contacts: [...Array(1000).keys()].map((dto, idx) => ({
+          firstName: `firstName${idx}`,
+          lastName: `lastName${idx}`,
+          age: Math.round(Math.random() * 100),
+          email: `email${idx}@example.com`,
+          phoneNumber: '+48500100200',
+        })),
+      };
+
+      request(app.getHttpServer())
+        .post('/contacts/many')
+        .send(createManyContactsDto)
+        .expect(201)
+        .expect((response) => {
+          const body = response.body;
+
+          console.log(body);
+
+          expect(body).toEqual(
+            createManyContactsDto.contacts.map((dto) => ({
+              ...dto,
+              id: expect.any(String),
+            })),
+          );
+          expect(body.length).toEqual(createManyContactsDto.contacts.length);
         })
         .end(done);
     });

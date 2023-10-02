@@ -33,19 +33,19 @@ export class ContactService {
   public async createMany(
     createContacts: ICreateContact[],
   ): Promise<ContactEntity[]> {
-    const response: ContactEntity[] = [];
+    const contactsToInsert = createContacts.map((createContact) => {
+      const newContact = new ContactEntity();
 
-    for (const createContact of createContacts) {
-      const contact = new ContactEntity();
+      newContact.firstName = createContact.firstName;
+      newContact.lastName = createContact.lastName;
+      newContact.age = createContact.age;
+      newContact.email = createContact.email;
+      newContact.phoneNumber = createContact.phoneNumber;
 
-      contact.firstName = createContact.firstName;
-      contact.lastName = createContact.lastName;
-      contact.age = createContact.age;
-      contact.email = createContact.email;
+      return newContact;
+    });
 
-      const savedData = await this.contactRepository.save(contact);
-      response.push(savedData);
-    }
+    const response = await this.contactRepository.save(contactsToInsert);
 
     return response;
   }

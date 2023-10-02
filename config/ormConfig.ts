@@ -11,6 +11,7 @@ const ORMConfig: TypeOrmModuleOptions = {
   entities: ['dist/src/**/*.entity.{ts,js}'],
   synchronize: true,
   keepConnectionAlive: true,
+  logging: true,
 };
 
 module.exports = ORMConfig;
